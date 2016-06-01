@@ -32,7 +32,10 @@ public class ImageAdapter extends BaseAdapter {
     static String[] image_url = new String[20];
     static String[][] Data = new String[image_url.length][4];
 
+    static ImageView[] imageViews = new ImageView[20];
     public ImageAdapter(Context c) {
+        for(int i=0;i<20;i++)
+            imageViews[i] = null;
         mContext = c;
     }
 
@@ -52,26 +55,21 @@ public class ImageAdapter extends BaseAdapter {
     // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        ImageView imageView;
+        if(imageViews[position]==null) {
 
-        if (convertView == null) {
-            // if it's not recycled, initialize some attributes
-            imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new GridView.LayoutParams(300, 380));
-        //    imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageView.setPadding(4, 4, 4, 4);
-        } else {
-            imageView = (ImageView) convertView;
+            imageViews[position] = new ImageView(mContext);
+            imageViews[position].setLayoutParams(new GridView.LayoutParams(300, 380));
+            imageViews[position].setPadding(4, 4, 4, 4);
+            FetchData task = new FetchData(imageViews[position]);
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+            String sort_type = sharedPref.getString("Sort By", "popular");
+
+            task.execute(Integer.toString(position), sort_type);
         }
-        FetchData task = new FetchData(imageView);
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
-        String sort_type = sharedPref.getString("Sort By","popular");
-
-        task.execute(Integer.toString(position),sort_type);
-        Log.v("Position ",Integer.toString(position));
+            Log.v("Position ",Integer.toString(position));
 
 
-        return imageView;
+        return imageViews[position];
 
     }
 
