@@ -109,7 +109,7 @@ public class ImageAdapter extends BaseAdapter {
 
             String base_url = "https://api.themoviedb.org/3/movie/";
             base_url+=params[1]+"?page="+Integer.toString(page_No)+"&";
-            
+
             String API_key = "api_key="+"PUT YOUR API KEY HERE";                /* PUT API KEY HERE */
 
             final String build = base_url+API_key;
