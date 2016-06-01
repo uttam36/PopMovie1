@@ -105,12 +105,11 @@ public class ImageAdapter extends BaseAdapter {
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
             int position = Integer.parseInt(params[0]);
-            int page_No = position/20 +1;
 
             String base_url = "https://api.themoviedb.org/3/movie/";
-            base_url+=params[1]+"?page="+Integer.toString(page_No)+"&";
+            base_url+=params[1]+"?";
 
-            String API_key = "api_key="+"PUT YOUR API KEY HERE";                /* PUT API KEY HERE */
+            String API_key = "api_key="+"PUT API KEY HERE";                /* PUT API KEY HERE */
 
             final String build = base_url+API_key;
 
