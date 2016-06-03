@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     static String[] image_url = new String[20];
     static String[][] Data = new String[image_url.length][4];
     static ImageView[] imageViews = new ImageView[20];
+    static ImageAdapter imageAdapter;
     public Context mContext=this;
 
     @Override
@@ -56,7 +57,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         GridView gridview = (GridView) findViewById(R.id.gridView);
-        gridview.setAdapter(new ImageAdapter(this));
+        imageAdapter = new ImageAdapter(this);
+        gridview.setAdapter(imageAdapter);
+
 
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -113,6 +116,12 @@ public class MainActivity extends AppCompatActivity {
         private ImageView imageView;
 
 
+        @Override
+        public void onPostExecute(Void result)
+        {
+            imageAdapter.notifyDataSetChanged();
+
+        }
         @Override
         protected Void doInBackground(String... params)
         {
