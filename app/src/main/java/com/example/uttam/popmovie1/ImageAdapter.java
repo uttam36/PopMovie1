@@ -5,6 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.squareup.picasso.Picasso;
+
 /**
  * Created by uttam on 8/5/16.
  */
@@ -33,6 +35,9 @@ public class ImageAdapter extends BaseAdapter {
     // create a new ImageView for each item referenced by the Adapter
     public View getView(int position, View convertView, ViewGroup parent) {
 
+        Picasso.with(mContext)
+                .load(MainActivity.image_url[position])
+                .into(MainActivity.imageViews[position]);
 
         return MainActivity.imageViews[position];
     }

@@ -15,8 +15,6 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,19 +39,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        for(int position=0;position<20;position++)
-        {
-                imageViews[position] = new ImageView(mContext);
-                imageViews[position].setLayoutParams(new GridView.LayoutParams(300, 380));
-                imageViews[position].setPadding(4, 4, 4, 4);
-                FetchData task = new FetchData(imageViews[position]);
+        for(int position=0;position<20;position++) {
+            imageViews[position] = new ImageView(mContext);
+            imageViews[position].setLayoutParams(new GridView.LayoutParams(300, 380));
+            imageViews[position].setPadding(4, 4, 4, 4);
+        }
+                FetchData task = new FetchData();
                 SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
                 String sort_type = sharedPref.getString("Sort By", "popular");
 
-                task.execute(Integer.toString(position), sort_type);
+                task.execute(sort_type);
 
-            Log.v("Position ",Integer.toString(position));
-        }
+            Log.v("Position ",Integer.toString(0));
+
 
 
 
@@ -84,19 +82,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume()
     {
-        for(int position=0;position<20;position++)
-        {
-            imageViews[position] = new ImageView(mContext);
-            imageViews[position].setLayoutParams(new GridView.LayoutParams(300, 380));
-            imageViews[position].setPadding(4, 4, 4, 4);
-            FetchData task = new FetchData(imageViews[position]);
+
+            FetchData task = new FetchData();
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
             String sort_type = sharedPref.getString("Sort By", "popular");
 
-            task.execute(Integer.toString(position), sort_type);
+            task.execute(sort_type);
 
-            Log.v("Position ",Integer.toString(position));
-        }
+
         super.onResume();
     }
     @Override
@@ -115,39 +108,20 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class FetchData extends AsyncTask<String,Void,String>
+    public class FetchData extends AsyncTask<String,Void,Void>
     {
         private ImageView imageView;
-        public FetchData(ImageView imageView)
-        {
-            this.imageView = imageView;
-        }
+
 
         @Override
-        protected void onPostExecute(String string)
+        protected Void doInBackground(String... params)
         {
-            if(string!=null)
-            {
-                String base = "http://image.tmdb.org/t/p/w185/";
-                base+=string;
-                Picasso.with(mContext)
-                        .load(base)
-                        .into(imageView);
-
-            }
-            super.onPostExecute(string);
-        }
-        @Override
-        protected String doInBackground(String... params)
-        {
-            // params[0] is Integer denoting position of view and params[1] is either "popular" or "top_rated"
+            // params[0] is either "popular" or "top_rated"
 
             HttpURLConnection urlConnection = null;
             BufferedReader reader = null;
-            int position = Integer.parseInt(params[0]);
-
             String base_url = "https://api.themoviedb.org/3/movie/";
-            base_url+=params[1]+"?";
+            base_url+=params[0]+"?";
 
             String API_key = "api_key="+"PUT API KEY HERE";                /* PUT API KEY HERE */
 
@@ -189,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.v("Json Data---->",movies_data);
 
                 try {
-                    return getPosterUrl(movies_data,position);
+                    getPosterUrl(movies_data);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -214,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        public String getPosterUrl(String movies_data,int pos) throws JSONException
+        public void getPosterUrl(String movies_data) throws JSONException
         {
             final String TMD_RESULTS = "results";
             final String TMD_POSTER_PATH = "poster_path";
@@ -225,14 +199,16 @@ public class MainActivity extends AppCompatActivity {
             JSONObject movieJson = new JSONObject(movies_data);
             JSONArray movieArray = movieJson.getJSONArray(TMD_RESULTS);
 
-            JSONObject result =  movieArray.getJSONObject(pos);
-            Data[pos][0] = result.getString(TMD_TITLE);
-            Data[pos][1] = result.getString(TMD_RATINGS);
-            Data[pos][2] = result.getString(TMD_RELEASE_DATE);
-            Data[pos][3] = result.getString(TMD_DESCRIPTION);
-            Log.v("Poster Path:--->",result.getString(TMD_POSTER_PATH));
-            image_url[pos] = "http://image.tmdb.org/t/p/w185/"+result.getString(TMD_POSTER_PATH);
-            return result.getString(TMD_POSTER_PATH);
+            for(int i=0;i<20;i++) {
+                JSONObject result = movieArray.getJSONObject(i);
+                Data[i][0] = result.getString(TMD_TITLE);
+                Data[i][1] = result.getString(TMD_RATINGS);
+                Data[i][2] = result.getString(TMD_RELEASE_DATE);
+                Data[i][3] = result.getString(TMD_DESCRIPTION);
+                Log.v("Poster Path:--->", result.getString(TMD_POSTER_PATH));
+                image_url[i] = "http://image.tmdb.org/t/p/w185/" + result.getString(TMD_POSTER_PATH);
+            }
+
         }
     }
 }
