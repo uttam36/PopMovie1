@@ -3,6 +3,7 @@ package com.example.uttam.popmovie1;
 /**
  * Created by uttam on 1/6/16.
  */
+
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -60,8 +61,6 @@ public class SettingActivity extends PreferenceActivity
             if (prefIndex >= 0) {
                 preference.setSummary(listPreference.getEntries()[prefIndex]);
             }
-            for(int i=0;i<20;i++)
-                ImageAdapter.imageViews[i]=null;
         } else {
             // For other preferences, set the summary to the value's simple string representation.
             preference.setSummary(stringValue);

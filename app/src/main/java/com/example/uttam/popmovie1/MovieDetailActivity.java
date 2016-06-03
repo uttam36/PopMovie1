@@ -35,12 +35,12 @@ public class MovieDetailActivity extends AppCompatActivity {
 
 
         Picasso.with(this)
-                .load(ImageAdapter.image_url[position])
+                .load(MainActivity.image_url[position])
                 .into(ivPoster);
-        tvTitle.setText(ImageAdapter.Data[position][0]);
-        tvRatings.setText("Ratings: "+ImageAdapter.Data[position][1]);
-        tvDate.setText(ImageAdapter.Data[position][2]);
-        eOverview.setText(ImageAdapter.Data[position][3]);
+        tvTitle.setText(MainActivity.Data[position][0]);
+        tvRatings.setText("Ratings: "+MainActivity.Data[position][1]);
+        tvDate.setText(MainActivity.Data[position][2]);
+        eOverview.setText(MainActivity.Data[position][3]);
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
